@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".FragmentSydney">
+
+    <ImageView
+        android:id="@+id/imageHeader"
+        android:layout_width="131dp"
+        android:layout_height="122dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/sydney_morning_herald"
+        app:layout_constraintBottom_toTopOf="@+id/imageLocal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageLocal"
+        android:layout_width="125dp"
+        android:layout_height="118dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/local"
+        app:layout_constraintBottom_toTopOf="@+id/imageWorld"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.097"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageHeader" />
+
+    <ImageView
+        android:id="@+id/imageWorld"
+        android:layout_width="125dp"
+        android:layout_height="118dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/world"
+        app:layout_constraintBottom_toTopOf="@+id/imageSport"
+        app:layout_constraintEnd_toEndOf="@+id/imageLocal"
+        app:layout_constraintTop_toBottomOf="@+id/imageLocal" />
+
+    <ImageView
+        android:id="@+id/imageSport"
+        android:layout_width="125dp"
+        android:layout_height="118dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/sport"
+        app:layout_constraintBottom_toTopOf="@+id/imageHealth"
+        app:layout_constraintEnd_toEndOf="@+id/imageWorld"
+        app:layout_constraintTop_toBottomOf="@+id/imageWorld" />
+
+    <ImageView
+        android:id="@+id/imageHealth"
+        android:layout_width="125dp"
+        android:layout_height="118dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/health"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageSport"
+        app:layout_constraintTop_toBottomOf="@+id/imageSport" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/National"
+        app:layout_constraintBottom_toBottomOf="@+id/imageLocal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageLocal"
+        app:layout_constraintTop_toTopOf="@+id/imageLocal" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/World"
+        app:layout_constraintBottom_toBottomOf="@+id/imageWorld"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageWorld"
+        app:layout_constraintTop_toTopOf="@+id/imageWorld" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Sport"
+        app:layout_constraintBottom_toBottomOf="@+id/imageSport"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageSport"
+        app:layout_constraintTop_toTopOf="@+id/imageSport" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Health"
+        app:layout_constraintBottom_toBottomOf="@+id/imageHealth"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageHealth"
+        app:layout_constraintTop_toTopOf="@+id/imageHealth" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,24 @@
+Data Viewer Change Log
+
+-----------------------------------------------------
+26/04/2020
+----------
+- Create base application
+- Create logo
+- Select Primary and Secondary Colours for Application
+- Implemented [implementation 'com.google.android.material:material:1.1.0'] dependency
+- Add navigation bar
+
+-----------------------------------------------------
+27/04/2020
+----------
+- Implemented Navigation Bar
+- Created SQL Settings Activity
+- Implemented SQL Settings button in Main Activity
+- Implemented Save button in SQL Settings Activity
+
+-----------------------------------------------------
+04/05/2020
+----------
+- Implemented Global class for variables
+- Implemented Persistant data in SQL Settings Activity

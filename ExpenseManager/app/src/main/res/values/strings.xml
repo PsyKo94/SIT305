@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ExpenseManager</string>
+    <string-array name="ExpenseList">
+        <item>Home Rent</item>
+        <item>Eating Out</item>
+        <item>Travel</item>
+        <item>Shopping</item>
+    </string-array>
+    <string name="button_add">ADD</string>
+    <string name="string_AUD">AUD</string>
+</resources>

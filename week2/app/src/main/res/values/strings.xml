@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">week2</string>
+    <string name="edit_first_num">Enter first number</string>
+    <string name="edit_second_num">Enter second number</string>
+    <string name="button_add">+</string>
+    <string name="button_subtract">-</string>
+    <string name="button_multiply">X</string>
+    <string name="button_divide">%</string>
+</resources>
