@@ -22,3 +22,11 @@ Data Viewer Change Log
 ----------
 - Implemented Global class for variables
 - Implemented Persistant data in SQL Settings Activity
+
+-----------------------------------------------------
+14/05/2020
+----------
+- Added jtds-1.2.5 library
+- Added IP Address varaible
+- Added login button in Main Activity
+- Implement SQL connection in Main Activity

@@ -7,14 +7,25 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import android.widget.Toast;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -25,20 +36,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Initialise Preference for saved SQL settings
     public static final String PREFS_NAME = "MyPrefsFile";
 
+    // Declaring connection variables
+    Connection con;
+    String un,pass,db,ip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Set SQL settings
-        /*
-        Global g = (Global)getApplication();
-        SharedPreferences sqlSettings = getSharedPreferences(PREFS_NAME,0);
-        SharedPreferences.Editor editor = sqlSettings.edit();
-        editor.putString("sql",g.getSqlSettings());
-        editor.commit();
-
-         */
 
         //Set toolbar as action bar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -64,7 +69,123 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 openSQLSettings();
             }
         });
+
+        // Declaring Server ip, username, database name and password
+        final SharedPreferences sharedpreferences;
+        sharedpreferences = getSharedPreferences("sql",MODE_PRIVATE);
+        ip = sharedpreferences.getString("ipKey", "");
+        db = sharedpreferences.getString("sqlKey", "");
+        un = sharedpreferences.getString("nameKey", "");
+        pass = sharedpreferences.getString("passwordKey", "");
+
+        // Setting up the function when button login is clicked
+        Button btnLogin = (Button) findViewById(R.id.button_login);
+        btnLogin.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                CheckLogin checkLogin = new CheckLogin();// this is the Asynctask, which is used to process in background to reduce load on app process
+                checkLogin.execute("");
+            }
+        });
+        //End Setting up the function when button login is clicked
     }
+
+    public class CheckLogin extends AsyncTask<String,String,String>
+    {
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPostExecute(String r)
+        {
+            Toast.makeText(MainActivity.this, r, Toast.LENGTH_SHORT).show();
+            if(isSuccess)
+            {
+                Toast.makeText(MainActivity.this , "Login successful" , Toast.LENGTH_LONG).show();
+                //finish();
+            }
+        }
+        @Override
+        protected String doInBackground(String... params)
+        {
+            Global g = (Global)getApplication();
+            String username = un;
+            String password = pass;
+            if(username.trim().equals("")|| password.trim().equals(""))
+                z = "Please enter Username and Password";
+            else
+            {
+                try
+                {
+                    // Connect to database
+                    con = connectionclass(un, pass, db, ip);
+                    if (con == null)
+                    {
+                        z = "Check Your Internet Access!";
+                    }
+                    else
+                    {
+                        //Test query
+                        String query = "select TOP 1 * from proc_materials";
+                        //String query = "select * from login where user_name= '" + username.toString() + "' and pass_word = '"+ password.toString() +"'  ";
+                        Statement stmt = con.createStatement();
+                        ResultSet rs = stmt.executeQuery(query);
+                        
+                        if(rs.next())
+                        {
+                            z = "Login successful";
+                            isSuccess=true;
+                            con.close();
+                        }
+                        else
+                        {
+                            z = "Invalid Credentials!";
+                            isSuccess = false;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    isSuccess = false;
+                    z = ex.getMessage();
+                }
+            }
+            return z;
+        }
+    }
+
+
+    @SuppressLint("NewApi")
+    public Connection connectionclass(String user, String password, String database, String server)
+    {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Connection connection = null;
+        String ConnectionURL = null;
+        try
+        {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            ConnectionURL = "jdbc:jtds:sqlserver://BNEPC5133/InnovaPackingTraining;user=testlogin;password=Password1;";
+            connection = DriverManager.getConnection(ConnectionURL);
+        }
+        catch (SQLException se)
+        {
+            Log.e("error here 1 : ", se.getMessage());
+        }
+        catch (ClassNotFoundException e)
+        {
+            Log.e("error here 2 : ", e.getMessage());
+        }
+        catch (Exception e)
+        {
+            Log.e("error here 3 : ", e.getMessage());
+        }
+        return connection;
+    }
+
+
 
     //Method to start SQL Settings Activity
     public void openSQLSettings() {
