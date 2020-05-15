@@ -6,26 +6,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
+import android.text.Layout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
 import android.widget.Toast;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -78,6 +79,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         un = sharedpreferences.getString("nameKey", "");
         pass = sharedpreferences.getString("passwordKey", "");
 
+        //If app launches for first time use Global instead of Shared Preference
+        Global g = (Global)getApplication();
+        if(ip.equals(""))
+        {
+            ip = g.getIpAddress();
+        }
+        if(db.equals(""))
+        {
+            db = g.getSqlSettings();
+        }
+        if(un.equals(""))
+        {
+            un = g.getUsername();
+        }
+        if(pass.equals(""))
+        {
+            pass = g.getPassword();
+        }
+
         // Setting up the function when button login is clicked
         Button btnLogin = (Button) findViewById(R.id.button_login);
         btnLogin.setOnClickListener(new View.OnClickListener()
@@ -85,13 +105,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v)
             {
-                CheckLogin checkLogin = new CheckLogin();// this is the Asynctask, which is used to process in background to reduce load on app process
+                //This calls the Check login to the SQL server
+                CheckLogin checkLogin = new CheckLogin();
                 checkLogin.execute("");
             }
         });
-        //End Setting up the function when button login is clicked
     }
 
+    //Check login
     public class CheckLogin extends AsyncTask<String,String,String>
     {
         String z = "";
@@ -104,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(isSuccess)
             {
                 Toast.makeText(MainActivity.this , "Login successful" , Toast.LENGTH_LONG).show();
-                //finish();
             }
         }
         @Override
@@ -132,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         //String query = "select * from login where user_name= '" + username.toString() + "' and pass_word = '"+ password.toString() +"'  ";
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery(query);
-                        
+
                         if(rs.next())
                         {
                             z = "Login successful";
@@ -154,6 +174,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             return z;
         }
+
+        //Report 1 query
+        protected ArrayList query1(ArrayList... params)
+        {
+            ArrayList<String> list = new ArrayList<String>();
+            try
+            {
+                // Connect to database
+                con = connectionclass(un, pass, db, ip);
+                if (con == null)
+                {
+                    z = "Check Your Internet Access!";
+                }
+                else
+                {
+                    //SQL query and list
+                    String query = "select name from proc_materials";
+                    Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+                    // Fetch each row from the results
+                    int i = 0;
+                    while (rs.next()) {
+                        String str = rs.getString("name");
+                        list.add(i, str);
+                        i++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccess = false;
+                z = ex.getMessage();
+            }
+            Toast.makeText(MainActivity.this , z , Toast.LENGTH_LONG).show();
+            return list;
+        }
+
     }
 
 
@@ -167,7 +224,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try
         {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            ConnectionURL = "jdbc:jtds:sqlserver://BNEPC5133/InnovaPackingTraining;user=testlogin;password=Password1;";
+            ConnectionURL = "jdbc:jtds:sqlserver://" + server + "/" + database + ";user=" + user + ";password=" + password + ";";
+            //ConnectionURL = "jdbc:jtds:sqlserver://BNEPC5133/InnovaPackingTraining;user=testlogin;password=Password1;";
             connection = DriverManager.getConnection(ConnectionURL);
         }
         catch (SQLException se)
@@ -185,8 +243,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return connection;
     }
 
-
-
     //Method to start SQL Settings Activity
     public void openSQLSettings() {
         Intent intent = new Intent(this, SQLSettings.class);
@@ -198,7 +254,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.report1:
-                Toast.makeText(this, "report1", Toast.LENGTH_SHORT).show();
+                //Get SQL data and send to fragment
+                ArrayList<String> MaterialList;
+                CheckLogin checkLogin = new CheckLogin();
+                MaterialList = checkLogin.query1();
+
+                //Send list to Global and Start Report 1 Activity
+                Global g = (Global)getApplication();
+                g.SetMaterialList(MaterialList);
+                Intent intent = new Intent(this, Report1.class);
+                startActivity(intent);
                 break;
 
             case R.id.report2:

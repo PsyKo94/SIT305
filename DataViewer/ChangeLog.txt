@@ -30,3 +30,10 @@ Data Viewer Change Log
 - Added IP Address varaible
 - Added login button in Main Activity
 - Implement SQL connection in Main Activity
+
+-----------------------------------------------------
+15/05/2020
+----------
+- Implement Query1 for Report1 in Main Activity
+- Added Activity for Report1
+- Added Layout for Report1

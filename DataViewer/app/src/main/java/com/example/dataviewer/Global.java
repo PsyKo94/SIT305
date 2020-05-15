@@ -1,17 +1,18 @@
 package com.example.dataviewer;
 import android.app.Application;
 
+import java.util.List;
+
 public class Global extends Application {
     //Declare global values
     private String ipAddress;
     private String sqlSettings;
     private String username;
     private String password;
+    private List materialList;
 
     //Set Getters and Setters
-    public String getIpAddress(){
-        return this.ipAddress;
-    }
+    public String getIpAddress(){ return this.ipAddress; }
 
     public void SetIpAddress(String i){
         this.ipAddress=i;
@@ -25,9 +26,7 @@ public class Global extends Application {
         this.sqlSettings=s;
     }
 
-    public String getUsername(){
-        return this.username;
-    }
+    public String getUsername(){ return this.username; }
 
     public void SetUsername(String u){
         this.username=u;
@@ -41,5 +40,11 @@ public class Global extends Application {
         this.password=p;
     }
 
+    public List getMaterialList(){
+        return this.materialList;
+    }
 
+    public void SetMaterialList(List l){
+        this.materialList=l;
+    }
 }
