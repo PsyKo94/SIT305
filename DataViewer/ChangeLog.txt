@@ -37,3 +37,8 @@ Data Viewer Change Log
 - Implement Query1 for Report1 in Main Activity
 - Added Activity for Report1
 - Added Layout for Report1
+
+-----------------------------------------------------
+20/05/2020
+----------
+- Added new launcher icon
